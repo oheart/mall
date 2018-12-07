@@ -35,5 +35,12 @@ export default new Router({
   ]
 })
 ```
-3. 编程式路由
+3. 编程式路由（通过js来实现页面的跳转）
+```js
+$router.push('name')
+$router.push({path: 'name'})
+$router.push({path:'name?a=123'}) 或者 $router.push({path: 'name', query: {a: 123})
+$router.go(1)
+```
+
 4. 命名路由

@@ -8,12 +8,24 @@
   <div>
        <router-view></router-view>
   </div>
+  <router-link to="/cart">routerLink - 跳转到购物车页面</router-link>
+  <div>
+    <button @click="jump">button - 跳转到购物车</button>
+  </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'GoodsList'
+  name: 'GoodsList',
+  methods:{
+    jump(){
+      //  this.$router.push('/cart');
+      //  this.$router.push({path: '/cart'});
+      // this.$router.push({path: '/cart?goodsId=123'});
+      this.$router.go(-1)
+    }
+  }
 }
 </script>
 
