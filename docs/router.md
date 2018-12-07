@@ -42,5 +42,8 @@ $router.push({path: 'name'})
 $router.push({path:'name?a=123'}) 或者 $router.push({path: 'name', query: {a: 123})
 $router.go(1)
 ```
+4. 命名路由（给路由定义不同的名字，根据名字进行匹配，给不同的router-view定义名字，通过名字进行对应组件的渲染）
 
-4. 命名路由
+
+
+

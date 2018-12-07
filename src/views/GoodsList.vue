@@ -8,7 +8,12 @@
   <div>
        <router-view></router-view>
   </div>
-  <router-link to="/cart">routerLink - 跳转到购物车页面</router-link>
+  <div>
+    <router-link :to="{name:'cart'}">routerLink（命名路由） - 跳转到购物车页面</router-link>
+  </div>
+  <div>
+    <router-link to="/cart">routerLink - 跳转到购物车页面</router-link>
+  </div>
   <div>
     <button @click="jump">button - 跳转到购物车</button>
   </div>

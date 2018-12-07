@@ -9,25 +9,18 @@ Vue.use(Router)
 
 export default new Router({
   routes: [
-    {  // 动态路由
-      path: '/goods/',
+    {
+      path: '/',
       name: 'GoodsList',
-      component: GoodsList,
-      children:[    // goods下面的子路由
-          {
-              path: 'title',
-              name: 'title',
-              component: Title
-          },
-          {
-            path: 'img',
-            name: 'img',
-            component: Image
-          }
-      ]
+      components: {
+        default: GoodsList,
+        title: Title,
+        img: Image
+      }
     },
     {
         path: '/cart',
+        name: 'cart',
         component: Cart
     }
   ]
