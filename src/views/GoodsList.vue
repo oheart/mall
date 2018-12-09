@@ -1,40 +1,66 @@
 <template>
   <div>
-   这是商品列表页面
-  <span>{{$route.params.goodsId}}</span><br/>
-  <span>{{$route.params.name}}</span>
-  <router-link to="/goods/title">显示商品标题</router-link>
-  <router-link to="/goods/img">显示商品图片</router-link>
-  <div>
-       <router-view></router-view>
-  </div>
-  <div>
-    <router-link :to="{name:'cart'}">routerLink（命名路由） - 跳转到购物车页面</router-link>
-  </div>
-  <div>
-    <router-link to="/cart">routerLink - 跳转到购物车页面</router-link>
-  </div>
-  <div>
-    <button @click="jump">button - 跳转到购物车</button>
-  </div>
+      <nav-header></nav-header>
+      <nav-bread>
+          <span>Goods</span>
+      </nav-bread>
+      <div class="accessory-result-page accessory-page">
+        <div class="container">
+          <div class="filter-nav">
+            <span class="sortby">Sort by:</span>
+            <a href="javascript:void(0)" class="default cur">Default</a>
+            <a href="javascript:void(0)" class="price">Price <svg class="icon icon-arrow-short"><use xlink:href="#icon-arrow-short"></use></svg></a>
+            <a href="javascript:void(0)" class="filterby stopPop">Filter by</a>
+          </div>
+          <div class="accessory-result">
+            <!-- filter -->
+            <div class="filter stopPop" id="filter">
+              <dl class="filter-price">
+                <dt>Price:</dt>
+                <dd><a href="javascript:void(0)">All</a></dd>
+                <dd>
+                  <a href="javascript:void(0)">0 - 100</a>
+                </dd>
+              </dl>
+            </div>
+
+            <!-- search result accessories list -->
+            <div class="accessory-list-wrap">
+              <div class="accessory-list col-4">
+                <ul>
+                  <li>
+                    <div class="pic">
+                      <a href="#"><img src="/static/1.jpg" alt=""></a>
+                    </div>
+                    <div class="main">
+                      <div class="name">XX</div>
+                      <div class="price">XX</div>
+                      <div class="btn-area">
+                        <a href="javascript:;" class="btn btn--m">加入购物车</a>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <nav-footer></nav-footer>
   </div>
 </template>
 
 <script>
+import NavHeader from '../components/NavHeader.vue'
+import NavFooter from '../components/NavFooter.vue'
+import NavBread from '../components/NavBread.vue'
+
 export default {
   name: 'GoodsList',
-  methods:{
-    jump(){
-      //  this.$router.push('/cart');
-      //  this.$router.push({path: '/cart'});
-      // this.$router.push({path: '/cart?goodsId=123'});
-      this.$router.go(-1)
-    }
+  components:{
+    NavHeader,
+    NavFooter,
+    NavBread
   }
 }
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-
-</style>
