@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>vue-resource</title>
+    <script src="../node_modules/vue/dist/vue.js"></script>
+    <script src="../node_modules/vue-resource/dist/vue-resource.js"></script>
+  </head>
+  <body>
+    <div id="app">
+        <h1>vue-resource使用</h1>
+        <a  href="javascript:;" @click="get">Get请求</a>
+        <a  href="javascript:;" @click="post">Post请求</a>
+        <a  href="javascript:;" @click="jsonp">JSONP请求</a>
+        <a  href="javascript:;" @click="http">http</a>
+        <div>
+         {{ msg }}
+        </div>
+    </div>
+    <script>
+        new Vue({
+          el: '#app',
+          data:{
+            msg: ''
+          },
+          mounted: function(){
+            Vue.http.interceptors.push(function(res, next){  // 拦截器
+                console.log('request init.'); // 请求前（可以做loading处理）
+                next(function(res){  // 请求后
+                  console.log('response init.');
+                  return res;
+                })
+            })
+          },
+          http:{
+            root: 'http://192.168.1.101:8080/' // 抽取请求公用的地址前缀
+          },
+          methods:{
+            get: function(){   // get请求
+              this.$http.get('package.json',{
+                params:{
+                    userId: '101'
+                },
+                headers:{
+                    token: 'abcd'
+                }
+              }).then(res => {
+                this.msg = res.data;
+              },err => {
+                this.msg = err;
+              })
+            },
+            post: function(){  // post请求...
+              this.$http.post("package.json",{
+                userId: '102'
+              },{
+                headers:{
+                  access_token: 'abc'
+                }
+              }).then(res => {
+                this.msg = res.data;
+              },err => {
+                this.msg = err;
+              })
+            },
+            jsonp: function(){  // jsonp请求
+              this.$http.jsonp("http://192.168.8.59/weixinvip/VIP/ERP/Home/api.ashx?a=getwxativity&i=1")
+                .then(res => {
+                    console.log(res);
+                })
+            },
+            http: function(){  // http配置
+              this.$http({
+                url: "package.json",
+                params:{
+                  userId: '103'
+                },
+                headers:{
+                  token: '123'
+                },
+                timeout: 5,
+                before: function(){
+                  console.log("before init")
+                }
+              }).then(function(res){
+                this.msg = res.data;
+              })
+            }
+          }
+        })
+    </script>
+  </body>
+</html>
