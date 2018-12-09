@@ -10,17 +10,23 @@
             <span class="sortby">Sort by:</span>
             <a href="javascript:void(0)" class="default cur">Default</a>
             <a href="javascript:void(0)" class="price">Price <svg class="icon icon-arrow-short"><use xlink:href="#icon-arrow-short"></use></svg></a>
-            <a href="javascript:void(0)" class="filterby stopPop">Filter by</a>
+            <a href="javascript:void(0)" class="filterby stopPop" @click="showFilterPop">Filter by</a>
           </div>
           <div class="accessory-result">
             <!-- filter -->
-            <div class="filter stopPop" id="filter">
+            <div class="filter stopPop" id="filter" :class="{'filterby-show': filterBy}">
               <dl class="filter-price">
                 <dt>Price:</dt>
-                <dd><a href="javascript:void(0)">All</a></dd>
                 <dd>
-                  <a href="javascript:void(0)">0 - 100</a>
+                  <a href="javascript:void(0)" :class="{'cur': priceChecked == 'all'}" @click="setPriceFilter('all')">
+                    All
+                  </a>
                 </dd>
+                <dd v-for="(price, index) in priceFilter" :key="index">
+                  <a href="javascript:void(0)" :class="{'cur': priceChecked == index}" @click="setPriceFilter(index)">
+                    {{price.startPrice}} - {{price.endPrice}}
+                  </a>
+               </dd>
               </dl>
             </div>
 
@@ -31,7 +37,8 @@
                   <li v-for="(item, index) in goodsList" :key="index">
                     <div class="pic">
                       <a href="#">
-                        <img :src="'/static/' + item.prodcutImg">
+                        <!-- <img :src="'/static/' + item.prodcutImg"> -->
+                         <img v-lazy="'/static/' + item.prodcutImg">
                       </a>
                     </div>
                     <div class="main">
@@ -48,6 +55,7 @@
           </div>
         </div>
       </div>
+      <div class="md-overlay" v-show="overLayFlag" @click.stop="closePop"></div>
       <nav-footer></nav-footer>
   </div>
 </template>
@@ -62,7 +70,24 @@ export default {
   name: 'GoodsList',
   data(){
     return{
-      goodsList: []
+      goodsList: [], // 商品列表
+      priceFilter:[ // 价格过滤数据
+        {
+          startPrice: '0.00',
+          endPrice: '500.00'
+        },
+        {
+          startPrice: '500.00',
+          endPrice: '1000.00'
+        },
+         {
+          startPrice: '1000.00',
+          endPrice: '2000.00'
+        }
+      ],
+      priceChecked: 'all',  // 价格选中状态
+      filterBy: false, //
+      overLayFlag: false, // 遮罩
     }
   },
   components:{
@@ -74,6 +99,18 @@ export default {
     this.getGoodsList();
   },
   methods:{
+    setPriceFilter(val){ // 设置price选中状态
+      this.priceChecked = val;
+      this.closePop();
+    },
+    showFilterPop(){  // 点击显示价格框
+      this.filterBy = true;
+      this.overLayFlag = true;
+    },
+    closePop(){ // 关闭遮罩层
+      this.filterBy = false;
+      this.overLayFlag = false;
+    },
     getGoodsList(){
       let that = this;
       axios.get('/static/mock/goods.json')
