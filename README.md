@@ -23,4 +23,6 @@ For a detailed explanation on how things work, check out the [guide](http://vuej
 - [路由](./docs/router.md)
 - [request](./docs/request.md)
 - [ES6](./docs/ES6.md)
+- [node](./docs/node.md)
+
 
