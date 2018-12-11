@@ -25,5 +25,6 @@ For a detailed explanation on how things work, check out the [guide](http://vuej
 - [ES6](./docs/ES6.md)
 - [node](./docs/node.md)
 - [express](./docs/express.md)
+- [mongodb](./docs/mongodb.md)
 
 
