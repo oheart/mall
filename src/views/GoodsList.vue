@@ -38,12 +38,12 @@
                     <div class="pic">
                       <a href="#">
                         <!-- <img :src="'/static/' + item.prodcutImg"> -->
-                         <img v-lazy="'/static/' + item.prodcutImg">
+                         <img v-lazy="'/static/' + item.productImage">
                       </a>
                     </div>
                     <div class="main">
                       <div class="name">{{item.productName}}</div>
-                      <div class="price">{{item.prodcutPrice}}</div>
+                      <div class="price">{{item.salePrice}}</div>
                       <div class="btn-area">
                         <a href="javascript:;" class="btn btn--m">加入购物车</a>
                       </div>
@@ -113,10 +113,15 @@ export default {
     },
     getGoodsList(){
       let that = this;
-      axios.get('/static/mock/goods.json')
+      axios.get('/goods')
         .then(function(res){
+            console.log('res', res)
             var resData = res.data;
-            that.goodsList = resData.result;
+            if(resData.status == '0'){
+                that.goodsList = resData.result.list;
+            }else{
+                that.goodsList = [];
+            }
         })
     }
   }
