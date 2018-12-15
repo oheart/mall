@@ -8,9 +8,13 @@
         <div class="container">
           <div class="filter-nav">
             <span class="sortby">Sort by:</span>
-            <a href="javascript:void(0)" class="default cur">Default</a>
-            <a href="javascript:void(0)" class="price">Price <svg class="icon icon-arrow-short"><use xlink:href="#icon-arrow-short"></use></svg></a>
-            <a href="javascript:void(0)" class="filterby stopPop" @click="showFilterPop">Filter by</a>
+            <a class="default cur">Default</a>
+            <a class="price" v-bind:class="{'sort-up':sortFlag}" @click="sortGoods">
+                Price
+                <svg class="icon icon-arrow-short">
+                <use xlink:href="#icon-arrow-short"></use></svg>
+            </a>
+            <a class="filterby stopPop" @click="showFilterPop">Filter by</a>
           </div>
           <div class="accessory-result">
             <!-- filter -->
@@ -18,7 +22,7 @@
               <dl class="filter-price">
                 <dt>Price:</dt>
                 <dd>
-                  <a href="javascript:void(0)" :class="{'cur': priceChecked == 'all'}" @click="setPriceFilter('all')">
+                  <a :class="{'cur': priceChecked == 'all'}" @click="setPriceFilter('all')">
                     All
                   </a>
                 </dd>
@@ -36,9 +40,9 @@
                 <ul>
                   <li v-for="(item, index) in goodsList" :key="index">
                     <div class="pic">
-                      <a href="#">
-                        <!-- <img :src="'/static/' + item.prodcutImg"> -->
-                         <img v-lazy="'/static/' + item.productImage">
+                      <a>
+                        <!-- <img :src="'/static/' + item.productImage"> -->
+                        <img v-lazy="'/static/' + item.productImage" :key="'/static/' + item.productImage">
                       </a>
                     </div>
                     <div class="main">
@@ -50,6 +54,9 @@
                     </div>
                   </li>
                 </ul>
+                <div class="view-more-normal" v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="20">
+                      <img src="./../assets/loading-spinning-bubbles.svg" v-show="loading">
+                </div>
               </div>
             </div>
           </div>
@@ -71,6 +78,9 @@ export default {
   data(){
     return{
       goodsList: [], // 商品列表
+      sortFlag: true, // 1代表升序
+      page: 1,    // 当前页码
+      pageSize: 4, // 每页总数
       priceFilter:[ // 价格过滤数据
         {
           startPrice: '0.00',
@@ -88,6 +98,8 @@ export default {
       priceChecked: 'all',  // 价格选中状态
       filterBy: false, //
       overLayFlag: false, // 遮罩
+      busy: true, // 默认无限滚动插件禁用
+      loading:false, // loading默认隐藏
     }
   },
   components:{
@@ -111,18 +123,50 @@ export default {
       this.filterBy = false;
       this.overLayFlag = false;
     },
-    getGoodsList(){
+    getGoodsList(loadMoreFlag){
       let that = this;
-      axios.get('/goods')
+      let params = {
+        page: this.page,
+        pageSize: this.pageSize,
+        sort: this.sortFlag ? 1 : -1
+      }
+      this.loading = true;
+      axios.get('/goods',{
+        params: params
+      })
         .then(function(res){
-            console.log('res', res)
+            that.loading = false;
+
             var resData = res.data;
             if(resData.status == '0'){
-                that.goodsList = resData.result.list;
+              if(loadMoreFlag){
+                  that.goodsList = [...that.goodsList,...resData.result.list];
+                  console.log('loadMoreList', that.goodsList);
+                  if(resData.result.count < that.pageSize){  // 没有更多时禁用滚动加载更多
+                      that.busy = true;
+                  }else{
+                      that.busy = false;
+                  }
+              }else{
+                  that.goodsList = resData.result.list;
+                  that.busy = false;
+              }
             }else{
                 that.goodsList = [];
             }
         })
+    },
+    sortGoods(){ // 排序商品
+      this.sortFlag = !this.sortFlag;
+      this.page = 1;
+      this.getGoodsList();
+    },
+    loadMore(){ // 加载更多
+        this.busy = true; //禁止再次滚动
+        setTimeout(() => {
+          this.page++;
+          this.getGoodsList(true);
+        }, 500)
     }
   }
 }

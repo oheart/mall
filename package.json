@@ -21,6 +21,7 @@
     "morgan": "~1.9.0",
     "serve-favicon": "~2.4.5",
     "vue": "^2.5.2",
+    "vue-infinite-scroll": "2.0.2",
     "vue-lazyload": "1.2.6",
     "vue-resource": "1.5.1",
     "vue-router": "^3.0.1"
