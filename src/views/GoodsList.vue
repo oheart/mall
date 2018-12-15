@@ -82,18 +82,22 @@ export default {
       page: 1,    // 当前页码
       pageSize: 4, // 每页总数
       priceFilter:[ // 价格过滤数据
-        {
-          startPrice: '0.00',
-          endPrice: '500.00'
-        },
-        {
-          startPrice: '500.00',
-          endPrice: '1000.00'
-        },
-         {
-          startPrice: '1000.00',
-          endPrice: '2000.00'
-        }
+            {
+                startPrice:'0.00',
+                endPrice:'100.00'
+            },
+            {
+              startPrice:'100.00',
+              endPrice:'500.00'
+            },
+            {
+              startPrice:'500.00',
+              endPrice:'1000.00'
+            },
+            {
+              startPrice:'1000.00',
+              endPrice:'5000.00'
+            }
       ],
       priceChecked: 'all',  // 价格选中状态
       filterBy: false, //
@@ -113,7 +117,9 @@ export default {
   methods:{
     setPriceFilter(val){ // 设置price选中状态
       this.priceChecked = val;
-      this.closePop();
+      this.closePop(); // 小窗口时关闭遮罩层
+      this.page = 1;
+      this.getGoodsList();
     },
     showFilterPop(){  // 点击显示价格框
       this.filterBy = true;
@@ -128,7 +134,8 @@ export default {
       let params = {
         page: this.page,
         pageSize: this.pageSize,
-        sort: this.sortFlag ? 1 : -1
+        sort: this.sortFlag ? 1 : -1,
+        priceLevel: this.priceChecked
       }
       this.loading = true;
       axios.get('/goods',{
@@ -141,7 +148,6 @@ export default {
             if(resData.status == '0'){
               if(loadMoreFlag){
                   that.goodsList = [...that.goodsList,...resData.result.list];
-                  console.log('loadMoreList', that.goodsList);
                   if(resData.result.count < that.pageSize){  // 没有更多时禁用滚动加载更多
                       that.busy = true;
                   }else{
