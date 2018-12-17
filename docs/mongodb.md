@@ -34,3 +34,8 @@ db.auth('admin', 'admin')
 mongoimport -d db_demo -c users --file /Users/yatengwang/ImoocMall/resource/dumall-users
 
 
+注：
+- db_demo：插入的数据库名
+- /Users/yatengwang/ImoocMall/resource/dumall-users：要导入的数据库文件路径
+- dumall-users：要导入的数据库文件名
+
