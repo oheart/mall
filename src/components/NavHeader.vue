@@ -63,7 +63,6 @@
 
 <script>
 import axios from 'axios'
-import { getCookie } from '../utils/cookie'
 
 export default {
   name: "navHeader",
@@ -77,9 +76,18 @@ export default {
     }
   },
   mounted(){
-     this.nickName = getCookie('userName') || '';
+    this.checkLogin();
   },
   methods:{
+    checkLogin(){ // 检查登录
+      axios.get('/users/checkLogin')
+          .then((res) => {
+            let resData = res.data;
+            if(resData.status == '0'){
+              this.nickName = resData.result;
+            }
+          })
+    },
     login(){  // 登录
       if(!this.userName || !this.userPwd){
         this.errorTip = true;

@@ -138,7 +138,7 @@ export default {
         priceLevel: this.priceChecked
       }
       this.loading = true;
-      axios.get('/goods',{
+      axios.get('/goods/list',{
         params: params
       })
         .then(function(res){
@@ -182,7 +182,7 @@ export default {
         if(resData.status == 0){
           alert('加入成功');
         }else{
-          alert("msg: ", resData.msg);
+          alert(resData.msg);
         }
       })
     }
