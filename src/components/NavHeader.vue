@@ -17,7 +17,7 @@
             <!--<a href="/" class="navbar-link">我的账户</a>-->
             <span class="navbar-link"  v-text="nickName" v-if="nickName"></span>
             <a href="javascript:void(0)" class="navbar-link" v-if="!nickName"  @click="loginModalFlag=true">Login</a>
-            <a href="javascript:void(0)" class="navbar-link" v-else>Logout</a>
+            <a href="javascript:void(0)" class="navbar-link" @click="logOut" v-else>Logout</a>
             <div class="navbar-cart-container">
               <span class="navbar-cart-count"></span>
               <a class="navbar-link navbar-cart-link" href="/#/cart">
@@ -63,6 +63,7 @@
 
 <script>
 import axios from 'axios'
+import { getCookie } from '../utils/cookie'
 
 export default {
   name: "navHeader",
@@ -76,7 +77,7 @@ export default {
     }
   },
   mounted(){
-
+     this.nickName = getCookie('userName') || '';
   },
   methods:{
     login(){  // 登录
@@ -99,6 +100,16 @@ export default {
             this.errorTip = true;
           }
         })
+    },
+    logOut(){ // 登出
+        axios.post("/users/logout")
+            .then((res) => {
+              let resData = res.data;
+              if(resData.status == "0"){
+                  this.nickName = "";
+                  alert('退出成功');
+              }
+            })
     }
   }
 };

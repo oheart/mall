@@ -9,8 +9,8 @@
 ## nodejs启动调试方式
 - 通过node命令启动
 切换到server目录，运行node bin/www,访问localhost:3000.
-- supervisor
+- supervisor --> 开发环境推荐
   - npm install supervisor -g
   - supervisor server/bin/www
-- pm2 （基于进程）--> 推荐
+- pm2 （基于进程）--> 生产环境推荐
 pm2 start server/bin/www
