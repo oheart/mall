@@ -8,7 +8,7 @@ vue express mall
 npm install
 
 # serve with hot reload at localhost:8080
-npm run dev
+npm run dev（npm start）
 
 # build for production with minification
 npm run build
@@ -21,7 +21,9 @@ For a detailed explanation on how things work, check out the [guide](http://vuej
 
 ## 启动
 **切换server**
-切换到server目录，运行node bin/www,访问localhost:3000.
+- 切换到项目目录，运行supervisor server/bin/www,访问localhost:3000.
+- 切换到项目目录，运行node bin/www,访问localhost:3000.
+
 
 
 ## 知识点
