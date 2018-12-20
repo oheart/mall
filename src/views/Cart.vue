@@ -62,7 +62,7 @@
               <li v-for="(item, index) in cartList" :key="index">
                 <div class="cart-tab-1">
                   <div class="cart-item-check">
-                    <a href="javascipt:;" class="checkbox-btn item-check-btn">
+                    <a href="javascipt:;" class="checkbox-btn item-check-btn" :class="{'check': item.checked == '1'}" @click="editCart(item, 'checked')">
                       <svg class="icon icon-ok">
                         <use xlink:href="#icon-ok"></use>
                       </svg>
@@ -82,9 +82,9 @@
                   <div class="item-quantity">
                     <div class="select-self select-self-open">
                       <div class="select-self-area">
-                        <a class="input-sub">-</a>
+                        <a class="input-sub" @click="editCart(item, 'minu')">-</a>
                         <span class="select-ipt">{{item.productNum}}</span>
-                        <a class="input-add">+</a>
+                        <a class="input-add" @click="editCart(item, 'add')">+</a>
                       </div>
                     </div>
                   </div>
@@ -191,6 +191,30 @@
                   this.getCartList();
                 }
               })
+          },
+          editCart(item, flag){ // 编辑购物商品数量
+            if(flag == 'add'){
+              item.productNum++;
+            }else if(flag == 'minu'){
+              if(item.productNum <= 1){
+                return;
+              }
+              item.productNum--;
+            }else if(flag == 'checked'){
+              item.checked = item.checked == '1' ? '0' : '1';
+            }
+
+            axios.post('/users/cartEdit', {
+              productId: item.productId,
+              productNum: item.productNum,
+              checked: item.checked
+            })
+            .then((res) => {
+              let resData = res.data;
+              if(resData.status == '0'){
+
+              }
+            })
           }
         }
 
