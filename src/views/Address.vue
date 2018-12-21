@@ -60,11 +60,11 @@
             <div class="addr-list-wrap">
               <div class="addr-list">
                 <ul>
-                  <li>
+                  <li v-for="(item, index) in addressList" :key="index">
                     <dl>
-                      <dt>userName</dt>
-                      <dd class="address">streetName</dd>
-                      <dd class="tel">tel</dd>
+                      <dt>{{item.userName}}</dt>
+                      <dd class="address">{{item.streetName}}</dd>
+                      <dd class="tel">{{item.tel}}</dd>
                     </dl>
                     <div class="addr-opration addr-del">
                       <a href="javascript:;" class="addr-del-btn">
@@ -145,11 +145,12 @@
   export default{
       data(){
           return{
-               isMdShow:false,
+            addressList: [], // 地址列表
+            isMdShow:false,
           }
       },
       mounted(){
-
+        this.getAddressList();
       },
       computed:{
 
@@ -161,6 +162,17 @@
         Modal
       },
       methods:{
+          getAddressList(){  // 获取地址列表
+            axios.get('/users/addressList')
+                .then((res) => {
+                    var resData = res.data;
+                    if(resData.status == '0'){
+                      this.addressList = resData.result;
+                    }else{
+
+                    }
+                })
+          },
           closeModal(){
               this.isMdShow = false;
           },
