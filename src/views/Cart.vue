@@ -76,7 +76,7 @@
                   </div>
                 </div>
                 <div class="cart-tab-2">
-                  <div class="item-price">{{item.salePrice}}</div>
+                  <div class="item-price">{{item.salePrice | currency('$')}}</div>
                 </div>
                 <div class="cart-tab-3">
                   <div class="item-quantity">
@@ -90,7 +90,7 @@
                   </div>
                 </div>
                 <div class="cart-tab-4">
-                  <div class="item-price-total">{{item.productNum * item.salePrice}}</div>
+                  <div class="item-price-total">{{(item.productNum * item.salePrice) | currency('$')}}</div>
                 </div>
                 <div class="cart-tab-5">
                   <div class="cart-item-opration">
@@ -109,8 +109,8 @@
           <div class="cart-foot-inner">
             <div class="cart-foot-l">
               <div class="item-all-check">
-                <a href="javascipt:;">
-                  <span class="checkbox-btn item-check-btn">
+                <a href="javascipt:;" @click="toggleCheckAll">
+                  <span class="checkbox-btn item-check-btn" :class="{'check': checkAllFlag}">
                       <svg class="icon icon-ok"><use xlink:href="#icon-ok"/></svg>
                   </span>
                   <span>Select all</span>
@@ -119,7 +119,7 @@
             </div>
             <div class="cart-foot-r">
               <div class="item-total">
-                Item total: <span class="total-price">uuY</span>
+                Item total: <span class="total-price">{{totalPrice | currency('$')}}</span>
               </div>
               <div class="btn-wrap">
                 <a class="btn btn--red">Checkout</a>
@@ -145,6 +145,7 @@
     import NavBread from './../components/NavBread'
     import Modal from './../components/Modal'
     import axios from 'axios'
+
     export default{
         data(){
             return{
@@ -157,7 +158,25 @@
           this.getCartList();
         },
         computed:{
-
+            checkAllFlag(){ // 选中所有标识
+              return this.checkedCount == this.cartList.length;
+            },
+            checkedCount(){ // 选中的商品数量
+                var i = 0;
+                this.cartList.forEach((item) => {
+                  if(item.checked == '1') i++;
+                })
+                return i;
+            },
+            totalPrice(){ // 总金额
+                var money = 0;
+                this.cartList.forEach((item) => {
+                  if(item.checked == '1'){
+                    money += parseFloat(item.salePrice) * parseInt(item.productNum);
+                  }
+                })
+                return money;
+            }
         },
         components:{
           NavHeader,
@@ -213,6 +232,21 @@
               let resData = res.data;
               if(resData.status == '0'){
 
+              }
+            })
+          },
+          toggleCheckAll(){ // 全选
+            var checkAllFlag = !this.checkAllFlag;
+            this.cartList.forEach((item) => {
+              item.checked = checkAllFlag;
+            })
+            axios.post("/users/editCheckAll", {
+              checkAll: checkAllFlag
+            })
+            .then((res) => {
+              let resData = res.data;
+              if(resData == '0'){
+                console.log('update suc');
               }
             })
           }
