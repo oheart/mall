@@ -122,7 +122,7 @@
                 Item total: <span class="total-price">{{totalPrice | currency('$')}}</span>
               </div>
               <div class="btn-wrap">
-                <a class="btn btn--red">Checkout</a>
+                <a class="btn btn--red" :class="{'btn--dis':checkedCount==0}" @click="checkOut">Checkout</a>
               </div>
             </div>
           </div>
@@ -249,6 +249,13 @@
                 console.log('update suc');
               }
             })
+          },
+          checkOut(){ // 结算
+            if(this.checkedCount > 0){
+                this.$router.push({
+                  path: '/address'
+                })
+            }
           }
         }
 
