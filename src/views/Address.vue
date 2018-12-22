@@ -67,7 +67,7 @@
                       <dd class="tel">{{item.tel}}</dd>
                     </dl>
                     <div class="addr-opration addr-del">
-                      <a href="javascript:;" class="addr-del-btn">
+                      <a href="javascript:;" class="addr-del-btn" @click="delAddressConfirm(item.addressId)">
                         <svg class="icon icon-del"><use xlink:href="#icon-del"></use></svg>
                       </a>
                     </div>
@@ -116,18 +116,18 @@
               </div>
             </div>
             <div class="next-btn-wrap">
-              <a class="btn btn--m btn--red">Next</a>
+              <router-link class="btn btn--m btn--red" v-bind:to="{path:'orderConfirm',query:{'addressId':selectedAddrId}}">Next</router-link>
             </div>
           </div>
         </div>
       </div>
-      <modal :mdShow="isMdShow" @close="closeModal">
+      <modal :mdShow="isMdShow" @closeModal="closeModal">
         <p slot="message">
           您是否确认要删除此地址?
         </p>
         <div slot="btnGroup">
-            <a class="btn btn--m" href="javascript:;">确认</a>
-            <a class="btn btn--m btn--red" href="javascript:;" @click="isMdShow=false">取消</a>
+            <a class="btn btn--m" @click="delAddress">确认</a>
+            <a class="btn btn--m btn--red"  @click="isMdShow=false">取消</a>
         </div>
       </modal>
       <nav-footer></nav-footer>
@@ -148,7 +148,9 @@
             limit: 3, // 限制条数
             addressList: [], // 地址列表
             checkIndex: 0, // 选中的地址项index
-            isMdShow:false
+            isMdShow:false,
+            addressId: '', // 要删除的地址id
+            selectedAddrId:'', // 选中的地址id
           }
       },
       mounted(){
@@ -172,8 +174,6 @@
                     var resData = res.data;
                     if(resData.status == '0'){
                       this.addressList = resData.result;
-                    }else{
-
                     }
                 })
           },
@@ -189,6 +189,7 @@
           },
           checkAddressItem(item, index){ // 选中地址项
             this.checkIndex = index;
+            this.selectedAddrId = item.addressId;
           },
           setDefault(addressId){ // 设置默认地址
                 axios.post('/users/setDefault',{
@@ -201,6 +202,23 @@
                       this.getAddressList();
                     }
                 })
+          },
+          delAddressConfirm(addressId){ // 确认删除地址项
+            this.isMdShow = true;
+            this.addressId = addressId;
+          },
+          delAddress(){ // 删除地址项
+            axios.post('/users/delAddress',{
+              addressId: this.addressId
+            })
+            .then((res) => {
+              var resData = res.data;
+              if(resData.status == '0'){
+                console.log('del suc');
+                this.isMdShow = false;
+                this.getAddressList();
+              }
+            })
           }
       }
   }
