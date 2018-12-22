@@ -217,6 +217,8 @@ router.get('/addressList', function(req, res, next){
         })
       }
     })
-  })
+})
+
+
 
 module.exports = router;

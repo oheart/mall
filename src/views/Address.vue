@@ -60,7 +60,7 @@
             <div class="addr-list-wrap">
               <div class="addr-list">
                 <ul>
-                  <li v-for="(item, index) in addressList" :key="index">
+                  <li v-for="(item, index) in addressListFilter" :key="index" :class="{'check': checkIndex == index}" @click="checkAddressItem(item, index)">
                     <dl>
                       <dt>{{item.userName}}</dt>
                       <dd class="address">{{item.streetName}}</dd>
@@ -88,7 +88,7 @@
               </div>
 
               <div class="shipping-addr-more">
-                <a class="addr-more-btn up-down-btn" href="javascript:;">
+                <a class="addr-more-btn up-down-btn"  @click="expand" :class="{'open': limit > 3}">
                   more
                   <i class="i-up-down">
                     <i class="i-up-down-l"></i>
@@ -145,15 +145,19 @@
   export default{
       data(){
           return{
+            limit: 3, // 限制条数
             addressList: [], // 地址列表
-            isMdShow:false,
+            checkIndex: 0, // 选中的地址项index
+            isMdShow:false
           }
       },
       mounted(){
         this.getAddressList();
       },
       computed:{
-
+        addressListFilter(){
+          return this.addressList.slice(0, this.limit);
+        },
       },
       components:{
         NavHeader,
@@ -176,6 +180,16 @@
           closeModal(){
               this.isMdShow = false;
           },
+          expand(){  // 展开地址列表
+            if(this.limit == 3){
+              this.limit = this.addressList.length;
+            }else{
+              this.limit = 3;
+            }
+          },
+          checkAddressItem(item, index){ // 选中地址项
+            this.checkIndex = index;
+          }
       }
   }
 </script>
