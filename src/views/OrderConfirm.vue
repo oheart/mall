@@ -118,7 +118,7 @@
             <router-link class="btn btn--m" to="/address">Previous</router-link>
           </div>
           <div class="next-btn-wrap">
-            <button class="btn btn--m btn--red">Proceed to payment</button>
+            <button class="btn btn--m btn--red"  @click="payMent">Proceed to payment</button>
           </div>
         </div>
       </div>
@@ -168,6 +168,22 @@
                     this.orderTotal = this.subTotal + this.shipping - this.discount + this.tax;
                 }
               })
+        },
+        payMent(){ // 支付创建订单
+          let addressId = this.$route.query.addressId;
+          axios.post('/users/payMent',{
+            addressId: addressId,
+            orderTotal: this.orderTotal
+          })
+            .then((res) => {
+               let resData = res.data;
+               if(resData.status == '0'){
+                  console.log('order created suc.')
+                  this.$router.push({
+                    path: '/orderSuccess?orderId=' + resData.result.orderId
+                  })
+               }
+            })
         }
       }
   }
