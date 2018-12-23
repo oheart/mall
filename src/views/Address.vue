@@ -174,6 +174,7 @@
                     var resData = res.data;
                     if(resData.status == '0'){
                       this.addressList = resData.result;
+                      this.selectedAddrId = this.addressList[0].addressId;
                     }
                 })
           },
