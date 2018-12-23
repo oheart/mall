@@ -322,7 +322,7 @@ router.post('/payMent', function(req, res, next){
         })
 
         // 获取用户购物车的购买商品
-        doc.addressList.filter((item) => {
+        doc.cartList.filter((item) => {
           if(item.checked == '1'){
             goodsList.push(item);
           }
