@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>vuex - Action</title>
+    <script src="../../node_modules/vue/dist/vue.js"></script>
+    <script src="../../node_modules/vuex/dist/vuex.min.js"></script>
+    <style>
+      .click-btn{
+        color: #2c2cd9;
+        text-decoration: underline;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <h2>{{msg}}</h2>
+      <a class="click-btn" @click="add">点击</a>
+      <counter></counter>
+    </div>
+    <script>
+      const counter = {
+        template: `
+          <div>
+              <div>点击数量：{{ count }}</div>
+              <div>用户名： {{ name }}</div>
+              <div>处理后的用户名： {{ handledName }}</div>
+          </div>
+        `,
+        computed: {
+          count(){
+            return this.$store.state.count;
+          },
+          name(){
+            return this.$store.state.name;
+          },
+          handledName(){
+            return this.$store.getters.handledName;
+          }
+        }
+      }
+      const store = new Vuex.Store({
+          state:{
+            count: 10,
+            name: 'jack'
+          },
+          getters:{
+            handledName(state){
+              return state.name + ', Hello';
+            }
+          },
+          mutations:{
+            increment(state){
+              state.count++;
+            },
+            updateName(state, userName){
+              state.name = userName;
+            }
+          },
+          actions:{
+            incrementAction(context){
+              context.commit('increment')
+            },
+            updateNameAction(context, userName){
+              context.commit('updateName', userName);
+            }
+          }
+      })
+      new Vue({
+        el: '#app',
+        store,
+        data:{
+          msg: 'Vuex的使用'
+        },
+        components:{
+          counter
+        },
+        methods:{
+          add(){
+            this.$store.dispatch('incrementAction');
+            this.$store.dispatch('updateNameAction', 'sisi');
+          }
+        }
+      })
+    </script>
+  </body>
+</html>

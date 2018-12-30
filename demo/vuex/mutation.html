@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>vuex - Mutation</title>
+    <script src="../../node_modules/vue/dist/vue.js"></script>
+    <script src="../../node_modules/vuex/dist/vuex.min.js"></script>
+    <style>
+      .click-btn{
+        color: #2c2cd9;
+        text-decoration: underline;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <h2>{{msg}}</h2>
+      <a class="click-btn" @click="add">点击</a>
+      <counter></counter>
+    </div>
+    <script>
+      const counter = {
+        template: `
+          <div>
+              <div>点击数量：{{ count }}</div>
+              <div>用户名： {{ name }}</div>
+          </div>
+        `,
+        computed: {
+          count(){
+            return this.$store.state.count;
+          },
+          name(){
+            return this.$store.state.name;
+          }
+        }
+      }
+      const store = new Vuex.Store({
+          state:{
+            count: 10,
+            name: 'jack'
+          },
+          mutations:{
+            increment(state){
+              state.count++;
+            },
+            updateName(state, userName){
+              state.name = userName;
+            }
+          }
+      })
+      new Vue({
+        el: '#app',
+        store,
+        data:{
+          msg: 'Vuex的使用'
+        },
+        components:{
+          counter
+        },
+        methods:{
+          add(){
+            this.$store.commit('increment');
+            this.$store.commit('updateName', 'sisi');
+          }
+        }
+      })
+    </script>
+  </body>
+</html>
