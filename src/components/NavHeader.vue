@@ -19,7 +19,7 @@
             <a href="javascript:void(0)" class="navbar-link" v-if="!nickName"  @click="loginModalFlag=true">Login</a>
             <a href="javascript:void(0)" class="navbar-link" @click="logOut" v-else>Logout</a>
             <div class="navbar-cart-container">
-              <span class="navbar-cart-count"></span>
+              <span class="navbar-cart-count" v-text="cartCount" v-if="cartCount"></span>
               <a class="navbar-link navbar-cart-link" href="/#/cart">
                 <svg class="navbar-cart-logo">
                   <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-cart"></use>
@@ -63,6 +63,7 @@
 
 <script>
 import axios from 'axios'
+import { mapState } from 'vuex'
 
 export default {
   name: "navHeader",
@@ -71,12 +72,23 @@ export default {
       userName: '',
       userPwd: '',
       errorTip: false, // 错误信息显示与否，默认不显示
-      loginModalFlag: false,
-      nickName: '' // 昵称
+      loginModalFlag: false
     }
   },
+  computed:{
+      ...mapState(['nickName','cartCount'])
+  },
+  // computed:{
+  //   nickName(){
+  //     return this.$store.state.nickName
+  //   },
+  //   cartCount(){
+  //       return this.$store.state.cartCount;
+  //   }
+  // },
   mounted(){
     this.checkLogin();
+    this.getCartCount();
   },
   methods:{
     checkLogin(){ // 检查登录
@@ -84,7 +96,9 @@ export default {
           .then((res) => {
             let resData = res.data;
             if(resData.status == '0'){
-              this.nickName = resData.result;
+              // this.nickName = resData.result;
+
+              this.$store.commit('updateUserInfo', resData.result);
             }
           })
     },
@@ -102,8 +116,9 @@ export default {
           if(resData.status == '0'){
             this.errorTip = false;
             this.loginModalFlag = false;
-            this.nickName = resData.result.userName;
-            // todo
+            // this.nickName = resData.result.userName;
+            this.$store.commit("updateUserInfo",resData.result.userName);
+            this.getCartCount();
           }else{
             this.errorTip = true;
           }
@@ -114,10 +129,19 @@ export default {
             .then((res) => {
               let resData = res.data;
               if(resData.status == "0"){
-                  this.nickName = "";
+                   this.$store.commit("updateUserInfo",resData.result.userName);
                   alert('退出成功');
               }
             })
+    },
+    getCartCount(){
+      axios.get('/users/getCartCount')
+          .then((res) => {
+            let resData = res.data;
+            if(resData.status == '0'){
+               this.$store.commit("updateCartCount",resData.result);
+            }
+          })
     }
   }
 };
