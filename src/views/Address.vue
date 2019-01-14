@@ -121,6 +121,7 @@
           </div>
         </div>
       </div>
+      <!-- 确认删除弹框 -->
       <modal :mdShow="isMdShow" @closeModal="closeModal">
         <p slot="message">
           您是否确认要删除此地址?
@@ -128,6 +129,15 @@
         <div slot="btnGroup">
             <a class="btn btn--m" @click="delAddress">确认</a>
             <a class="btn btn--m btn--red"  @click="isMdShow=false">取消</a>
+        </div>
+      </modal>
+      <!-- 提示(地址列表至少要有一条数据)弹框 -->
+      <modal :mdShow="isMdShow2" @closeModal="isMdShow2 = false">
+        <p slot="message">
+         地址列表至少要有一条数据，已无法继续删除.
+        </p>
+        <div slot="btnGroup">
+            <a class="btn btn--m" @click="isMdShow2 = false">好的</a>
         </div>
       </modal>
       <nav-footer></nav-footer>
@@ -148,9 +158,10 @@
             limit: 3, // 限制条数
             addressList: [], // 地址列表
             checkIndex: 0, // 选中的地址项index
-            isMdShow:false,
+            isMdShow:false, // 删除弹框是否显示，默认不显示
             addressId: '', // 要删除的地址id
             selectedAddrId:'', // 选中的地址id
+            isMdShow2: false, // 提示弹框是否显示，默认不显示
           }
       },
       mounted(){
@@ -174,7 +185,9 @@
                     var resData = res.data;
                     if(resData.status == '0'){
                       this.addressList = resData.result;
-                      this.selectedAddrId = this.addressList[0].addressId;
+                      if(resData.result.length > 0){
+                          this.selectedAddrId = this.addressList[0].addressId;
+                      }
                     }
                 })
           },
@@ -205,8 +218,12 @@
                 })
           },
           delAddressConfirm(addressId){ // 确认删除地址项
-            this.isMdShow = true;
-            this.addressId = addressId;
+            if(this.addressList.length > 1){
+                this.isMdShow = true;
+                this.addressId = addressId;
+            }else{
+              this.isMdShow2 = true;
+            }
           },
           delAddress(){ // 删除地址项
             axios.post('/users/delAddress',{

@@ -111,10 +111,15 @@ router.post("/addCart", function(req, res, next){
               })
             }else{
               if(doc){
-                doc.productNum = 1;
-                doc.checked = 1;
                 console.log('doc', doc)
-                userDoc.cartList.push(doc);
+                userDoc.cartList.push({
+                    "productId":  doc.productId,
+                    "productName": doc.productName,
+                    "salePrice":  doc.salePrice,
+                    "productImage": doc.productImage,
+                    "productNum": 1,
+                    "checked": 1
+                });
                 userDoc.save(function(err2, doc){
                   if(err2){
                     res.json({
