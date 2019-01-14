@@ -208,6 +208,7 @@
                 if(resData.status == '0'){
                   this.modalConfirm = false;
                   this.getCartList();
+                  this.$store.commit('updateCartCount',- this.delItem.productNum);
                 }
               })
           },
@@ -231,7 +232,13 @@
             .then((res) => {
               let resData = res.data;
               if(resData.status == '0'){
-
+                let num = 0;
+                if(flag == 'add'){
+                    num = 1;
+                }else if(flag == 'minu'){
+                    num = -1;
+                }
+                this.$store.commit('updateCartCount', num);
               }
             })
           },

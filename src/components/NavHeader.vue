@@ -130,6 +130,7 @@ export default {
               let resData = res.data;
               if(resData.status == "0"){
                    this.$store.commit("updateUserInfo",resData.result.userName);
+                   this.$store.commit("resetCartCount");
                   alert('退出成功');
               }
             })
@@ -139,7 +140,7 @@ export default {
           .then((res) => {
             let resData = res.data;
             if(resData.status == '0'){
-               this.$store.commit("updateCartCount",resData.result);
+               this.$store.commit("initCartCount",resData.result);
             }
           })
     }

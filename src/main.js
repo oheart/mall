@@ -24,11 +24,17 @@ const store = new Vuex.Store({
     cartCount: 0
   },
   mutations:{
-    updateUserInfo(state, nickName){
+    updateUserInfo(state, nickName){ // 更新用户信息
       state.nickName = nickName;
     },
-    updateCartCount(state, cartCount){
+    updateCartCount(state, cartCount){ // 更新购物车数量
+      state.cartCount += cartCount;
+    },
+    initCartCount(state, cartCount){ // 初始化购物车数量
       state.cartCount = cartCount;
+    },
+    resetCartCount(state){ // 清空购物车
+      state.cartCount = 0;
     }
   }
 })

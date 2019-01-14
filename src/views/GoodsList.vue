@@ -210,6 +210,7 @@ export default {
         if(resData.status == 0){
           // alert('加入成功');
           this.mdShowCart = true;
+          this.$store.commit('updateCartCount', 1);
         }else{
           // alert(resData.msg);
           this.mdShow = true;
